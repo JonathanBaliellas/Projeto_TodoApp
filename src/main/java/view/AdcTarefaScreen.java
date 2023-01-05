@@ -24,9 +24,11 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
      * Creates new form AdcTarefaScreen
      */
     
+    //ATRIBUTOS
     TarefaController controlador;//Declara o controlador da tarefa
     Projetos projeto;//Declara um projeto
     
+    //MÉTODOS
     public AdcTarefaScreen(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -205,8 +207,8 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
                 tarefa.setObservacoes(txt_obsTarefa.getText());
                 tarefa.setPrazo(prazo);
                 tarefa.setConcluido(false);
-//                tarefa.setProj_id(projeto.getId());
-            tarefa.setProj_id(3);
+                tarefa.setProj_id(projeto.getId());
+                
                 //Envia a tarefa para o controlador
                 controlador.incluir(tarefa);
                 
@@ -278,6 +280,7 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
     private javax.swing.JFormattedTextField txt_prazoTarefa;
     // End of variables declaration//GEN-END:variables
 
+    //MÉTODOS ACESSORES
     public void setProjeto(Projetos projeto) {
         this.projeto = projeto;
     }

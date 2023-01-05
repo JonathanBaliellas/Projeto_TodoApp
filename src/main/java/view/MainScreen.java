@@ -12,6 +12,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
 import model.Projetos;
 import model.Tarefas;
 import util.TabTarefasModel;
@@ -26,14 +28,16 @@ public class MainScreen extends javax.swing.JFrame {
      * Creates new form MainScreen
      */
     
+    //ATRIBUTOS
     ProjetoController projetoController;
     TarefaController tarefaController;
     DefaultListModel modeloProjeto;
     TabTarefasModel modeloTarefas;
     
+    
+    //MÉTODOS DE COMPONENTES    
     public MainScreen() {
         initComponents();//Inicializa os componentes da janela
-        decorarTabela();//Altera a aparência da tabela
         iniciarControllers();//Inicializa os controladores
         iniciarComponentModel();//Inicializa os modelos dos componentes
     }
@@ -103,8 +107,7 @@ public class MainScreen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TodoApp");
-        setMinimumSize(new java.awt.Dimension(600, 700));
-        setPreferredSize(new java.awt.Dimension(1200, 900));
+        setMinimumSize(new java.awt.Dimension(650, 700));
 
         pnl_titulo.setBackground(new java.awt.Color(0, 153, 102));
 
@@ -247,6 +250,7 @@ public class MainScreen extends javax.swing.JFrame {
         );
 
         pnl_listaTarefas.setBackground(new java.awt.Color(255, 255, 255));
+        pnl_listaTarefas.setLayout(new java.awt.BorderLayout());
 
         spn_listaTarefas.setBackground(new java.awt.Color(255, 255, 255));
         spn_listaTarefas.setBorder(null);
@@ -294,16 +298,7 @@ public class MainScreen extends javax.swing.JFrame {
         });
         spn_listaTarefas.setViewportView(tab_listaTarefas);
 
-        javax.swing.GroupLayout pnl_listaTarefasLayout = new javax.swing.GroupLayout(pnl_listaTarefas);
-        pnl_listaTarefas.setLayout(pnl_listaTarefasLayout);
-        pnl_listaTarefasLayout.setHorizontalGroup(
-            pnl_listaTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spn_listaTarefas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 954, Short.MAX_VALUE)
-        );
-        pnl_listaTarefasLayout.setVerticalGroup(
-            pnl_listaTarefasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(spn_listaTarefas, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
-        );
+        pnl_listaTarefas.add(spn_listaTarefas, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -353,16 +348,24 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_adcProjetoMouseClicked
 
     private void btn_adcTarefaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_adcTarefaMouseClicked
-        // TODO add your handling code here:
+        //Cria a janela de adição de tarefas
         AdcTarefaScreen telaCadTarefa = new AdcTarefaScreen(this, rootPaneCheckingEnabled);
-        //telaCadTarefa.setProjeto(null);
+        
+        //Passa o projeto selecionado à janela de adição de tarefas
+        int indiceProjeto = lst_Projetos.getSelectedIndex();
+        Projetos projeto = (Projetos) modeloProjeto.get(indiceProjeto);
+        telaCadTarefa.setProjeto(projeto);
+        
+        //Abre a janela de adição de tarefas
         telaCadTarefa.setVisible(true);
         
-        //Cria um listener para atualizar a tabela
-        int proj_id = 1;//Temporário
+        /**
+         * Cria um listener para atualizar a tabela quando a janela de adição de 
+         * tarefas for fechada
+         */
         telaCadTarefa.addWindowListener(new WindowAdapter(){
             public void windowClosed(WindowEvent e){
-                carregarTarefas(proj_id);//Atualiza a lista    
+                carregarTarefas(projeto.getId());//Atualiza a lista    
             }
         });
     }//GEN-LAST:event_btn_adcTarefaMouseClicked
@@ -380,10 +383,19 @@ public class MainScreen extends javax.swing.JFrame {
         int indiceLinha = tab_listaTarefas.rowAtPoint(evt.getPoint());
         int indiceColuna = tab_listaTarefas.columnAtPoint(evt.getPoint());
         
-        if(indiceColuna == 3){//Se o click ocorreu na coluna 3 (concluído)
-            //Cria um objeto Tarefa que recebe a tarefa clicada
-            Tarefas tarefa = modeloTarefas.getListaTarefas().get(indiceLinha);
-            tarefaController.atualizar(tarefa);//Atualiza a tarefa clicada
+        //Cria um objeto Tarefa que recebe a tarefa clicada
+        Tarefas tarefa = modeloTarefas.getListaTarefas().get(indiceLinha);
+        
+        //Define a ação a ser tomada com base na coluna em que o clique ocorreu
+        switch(indiceColuna){
+            case 3://(checkbox)
+                tarefaController.atualizar(tarefa);//Atualiza a tarefa clicada
+                break;
+            case 5://(excluir)
+                tarefaController.excluir(tarefa.getId());//Exclui do BD a tarefa clicada
+                modeloTarefas.getListaTarefas().remove(tarefa);//Exclui a tarefa da lista
+                carregarTarefas(tarefa.getProj_id());//Recarrega a tabela de tarefas
+                break;
         }
     }//GEN-LAST:event_tab_listaTarefasMouseClicked
 
@@ -444,12 +456,19 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTable tab_listaTarefas;
     // End of variables declaration//GEN-END:variables
 
+    
+    //MÉTODOS
     public void decorarTabela(){
         //Personaliza as cores do cabeçalho da tabela
         tab_listaTarefas.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));//Define a fonte
         tab_listaTarefas.getTableHeader().setBackground(new Color(0,153,102));//Define a cor de fundo
         tab_listaTarefas.getTableHeader().setForeground(new Color(255,255,255));//Define a cor da fonte
         tab_listaTarefas.setAutoCreateRowSorter(true);
+        
+        //Centraliza coluna Prazo
+        DefaultTableCellRenderer centralizado = new DefaultTableCellRenderer();
+        centralizado.setHorizontalAlignment(JLabel.CENTER);
+        tab_listaTarefas.getColumnModel().getColumn(2).setCellRenderer(centralizado);
     }
     
     public void iniciarControllers(){
@@ -465,6 +484,7 @@ public class MainScreen extends javax.swing.JFrame {
         //Iniciar tabela de tarefas
         modeloTarefas = new TabTarefasModel();
         tab_listaTarefas.setModel(modeloTarefas);
+        decorarTabela();
         
         //Seleciona o primeiro projeto da lista e carrega suas tarefas
         if(!modeloProjeto.isEmpty()){//Se a lista de projetos não estiver vazia
