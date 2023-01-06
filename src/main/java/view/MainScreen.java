@@ -13,9 +13,12 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import model.Projetos;
 import model.Tarefas;
+import util.RenderTabTarefasBotoes;
+import util.RenderTabTarefasCelPrazo;
 import util.TabTarefasModel;
 
 /**
@@ -107,7 +110,8 @@ public class MainScreen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TodoApp");
-        setMinimumSize(new java.awt.Dimension(650, 700));
+        setMinimumSize(new java.awt.Dimension(800, 700));
+        setPreferredSize(new java.awt.Dimension(1000, 700));
 
         pnl_titulo.setBackground(new java.awt.Color(0, 153, 102));
 
@@ -392,9 +396,16 @@ public class MainScreen extends javax.swing.JFrame {
                 tarefaController.atualizar(tarefa);//Atualiza a tarefa clicada
                 break;
             case 5://(excluir)
-                tarefaController.excluir(tarefa.getId());//Exclui do BD a tarefa clicada
-                modeloTarefas.getListaTarefas().remove(tarefa);//Exclui a tarefa da lista
-                carregarTarefas(tarefa.getProj_id());//Recarrega a tabela de tarefas
+                String[] opcoes = {"Sim","Não"};
+                int confirm = JOptionPane.showOptionDialog(rootPane, 
+                        "Tem certeza de que deseja excluir a tarefa?", 
+                        "Excluir tarefa", 0, 3,null,opcoes,opcoes[0]);
+                
+                if(confirm == 0){//Se confirmar a exclusão...
+                    tarefaController.excluir(tarefa.getId());//Exclui do BD a tarefa clicada
+                    modeloTarefas.getListaTarefas().remove(tarefa);//Exclui a tarefa da lista
+                    carregarTarefas(tarefa.getProj_id());//Recarrega a tabela de tarefas
+                }
                 break;
         }
     }//GEN-LAST:event_tab_listaTarefasMouseClicked
@@ -465,10 +476,12 @@ public class MainScreen extends javax.swing.JFrame {
         tab_listaTarefas.getTableHeader().setForeground(new Color(255,255,255));//Define a cor da fonte
         tab_listaTarefas.setAutoCreateRowSorter(true);
         
-        //Centraliza coluna Prazo
-        DefaultTableCellRenderer centralizado = new DefaultTableCellRenderer();
-        centralizado.setHorizontalAlignment(JLabel.CENTER);
-        tab_listaTarefas.getColumnModel().getColumn(2).setCellRenderer(centralizado);
+        //Define o renderizador personalizado para a coluna 2 (prazo)
+        tab_listaTarefas.getColumnModel().getColumn(2).setCellRenderer(new RenderTabTarefasCelPrazo());
+        
+        //Define os ícones dos botões das colunas 4 e 5 (editar e excluir)
+        tab_listaTarefas.getColumnModel().getColumn(4).setCellRenderer(new RenderTabTarefasBotoes("edit"));
+        tab_listaTarefas.getColumnModel().getColumn(5).setCellRenderer(new RenderTabTarefasBotoes("delete"));
     }
     
     public void iniciarControllers(){
@@ -484,6 +497,8 @@ public class MainScreen extends javax.swing.JFrame {
         //Iniciar tabela de tarefas
         modeloTarefas = new TabTarefasModel();
         tab_listaTarefas.setModel(modeloTarefas);
+        
+        //Aplica configurações de renderização da tabela personalizados
         decorarTabela();
         
         //Seleciona o primeiro projeto da lista e carrega suas tarefas
