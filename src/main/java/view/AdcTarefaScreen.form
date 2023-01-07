@@ -153,7 +153,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Nome"/>
+            <Property name="text" type="java.lang.String" value="* Nome"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txt_nomeTarefa">
@@ -202,7 +202,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="0" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Prazo"/>
+            <Property name="text" type="java.lang.String" value="* Prazo"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txt_prazoTarefa">

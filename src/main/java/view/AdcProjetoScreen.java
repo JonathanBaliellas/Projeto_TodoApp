@@ -84,7 +84,7 @@ public class AdcProjetoScreen extends javax.swing.JDialog {
         pnl_form.setBackground(new java.awt.Color(255, 255, 255));
 
         lbl_nomeProjeto.setForeground(new java.awt.Color(0, 0, 0));
-        lbl_nomeProjeto.setText("Nome");
+        lbl_nomeProjeto.setText("* Nome");
 
         txt_nomeProjeto.setBackground(new java.awt.Color(255, 255, 255));
         txt_nomeProjeto.setForeground(new java.awt.Color(0, 0, 0));

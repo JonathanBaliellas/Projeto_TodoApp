@@ -100,7 +100,7 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
         pnl_form.setBackground(new java.awt.Color(255, 255, 255));
 
         lbl_nomeTarefa.setForeground(new java.awt.Color(0, 0, 0));
-        lbl_nomeTarefa.setText("Nome");
+        lbl_nomeTarefa.setText("* Nome");
 
         txt_nomeTarefa.setBackground(new java.awt.Color(255, 255, 255));
         txt_nomeTarefa.setForeground(new java.awt.Color(0, 0, 0));
@@ -117,7 +117,7 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
         spn_descricaoTarefa.setViewportView(txt_descricaoTarefa);
 
         lbl_prazoTarefa.setForeground(new java.awt.Color(0, 0, 0));
-        lbl_prazoTarefa.setText("Prazo");
+        lbl_prazoTarefa.setText("* Prazo");
 
         txt_prazoTarefa.setBackground(new java.awt.Color(255, 255, 255));
         txt_prazoTarefa.setForeground(new java.awt.Color(0, 0, 0));
@@ -193,8 +193,10 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
     private void btn_adcTarefaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_adcTarefaMouseClicked
         // TODO add your handling code here:
         //Validação de dados
-        if("".equals(txt_nomeTarefa.getText())){
-            JOptionPane.showMessageDialog(rootPane, "Insira o nome do projeto", "", 0);
+        if(txt_nomeTarefa.getText().isEmpty() || txt_prazoTarefa.getText().isEmpty()){
+            JOptionPane.showMessageDialog(rootPane, 
+                    "Há campos obrigatórios que não foram preenchidos", 
+                    "Tarefa não salva", 0);
         }else{
             try{
                 SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");//Cria um novo formatação de data
