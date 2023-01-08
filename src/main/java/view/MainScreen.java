@@ -36,6 +36,7 @@ public class MainScreen extends javax.swing.JFrame {
     TarefaController tarefaController;
     DefaultListModel modeloProjeto;
     TabTarefasModel modeloTarefas;
+    Tarefas editarTarefa;
     
     
     //MÉTODOS DE COMPONENTES    
@@ -353,14 +354,14 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void btn_adcTarefaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_adcTarefaMouseClicked
         //Cria a janela de adição de tarefas
-        AdcTarefaScreen telaCadTarefa = new AdcTarefaScreen(this, rootPaneCheckingEnabled);
+        AdcTarefaScreen telaCadTarefa = new AdcTarefaScreen(this, rootPaneCheckingEnabled, editarTarefa);
         
         //Passa o projeto selecionado à janela de adição de tarefas
         int indiceProjeto = lst_Projetos.getSelectedIndex();
         Projetos projeto = (Projetos) modeloProjeto.get(indiceProjeto);
         telaCadTarefa.setProjeto(projeto);
         
-        //Abre a janela de adição de tarefas
+        //Abre a janela de tarefas
         telaCadTarefa.setVisible(true);
         
         /**
@@ -370,6 +371,7 @@ public class MainScreen extends javax.swing.JFrame {
         telaCadTarefa.addWindowListener(new WindowAdapter(){
             public void windowClosed(WindowEvent e){
                 carregarTarefas(projeto.getId());//Atualiza a lista    
+                editarTarefa = null;
             }
         });
     }//GEN-LAST:event_btn_adcTarefaMouseClicked
@@ -394,6 +396,10 @@ public class MainScreen extends javax.swing.JFrame {
         switch(indiceColuna){
             case 3://(checkbox)
                 tarefaController.atualizar(tarefa);//Atualiza a tarefa clicada
+                break;
+            case 4://(editar)
+                editarTarefa = tarefa;
+                btn_adcTarefaMouseClicked(evt);
                 break;
             case 5://(excluir)
                 String[] opcoes = {"Sim","Não"};

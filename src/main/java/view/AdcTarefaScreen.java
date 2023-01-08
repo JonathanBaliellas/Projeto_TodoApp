@@ -5,11 +5,9 @@
 package view;
 
 import controller.TarefaController;
-import java.text.ParseException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Tarefas;
 import model.Projetos;
@@ -27,14 +25,20 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
     //ATRIBUTOS
     TarefaController controlador;//Declara o controlador da tarefa
     Projetos projeto;//Declara um projeto
+    Tarefas editarTarefa;
     
-    //MÉTODOS
-    public AdcTarefaScreen(java.awt.Frame parent, boolean modal) {
+    //CONSTRUTOR
+    public AdcTarefaScreen(java.awt.Frame parent, boolean modal) {}
+    
+    public AdcTarefaScreen(java.awt.Frame parent, boolean modal, Tarefas editarTarefa) {
         super(parent, modal);
         initComponents();
         controlador = new TarefaController();//Instancia o controlador
+        this.editarTarefa = editarTarefa;
+        preencherCamposEditarTarefa();
     }
 
+    //MÉTODOS
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -193,7 +197,7 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
     private void btn_adcTarefaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_adcTarefaMouseClicked
         // TODO add your handling code here:
         //Validação de dados
-        if(txt_nomeTarefa.getText().isEmpty() || txt_prazoTarefa.getText().isEmpty()){
+        if(txt_nomeTarefa.getText().equals("") || txt_prazoTarefa.getText().isEmpty()){
             JOptionPane.showMessageDialog(rootPane, 
                     "Há campos obrigatórios que não foram preenchidos", 
                     "Tarefa não salva", 0);
@@ -212,13 +216,17 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
                 tarefa.setProj_id(projeto.getId());
                 
                 //Envia a tarefa para o controlador
-                controlador.incluir(tarefa);
+                if(editarTarefa == null) controlador.incluir(tarefa);
+                else {
+                    tarefa.setId(editarTarefa.getId());
+                    controlador.atualizar(tarefa);
+                }
                 
                 //Confirmação
                 JOptionPane.showMessageDialog(rootPane, "Tarefa salva com sucesso!", "Sucesso", 1);
                 this.dispose();//Fecha a janela
             }catch(Exception e){
-                JOptionPane.showMessageDialog(rootPane, "Erro ao inserir nova tarefa", "Erro", 0);
+                JOptionPane.showMessageDialog(rootPane, "Erro ao salvar tarefa", "Erro", 0);
             }
         }
     }//GEN-LAST:event_btn_adcTarefaMouseClicked
@@ -282,6 +290,16 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
     private javax.swing.JFormattedTextField txt_prazoTarefa;
     // End of variables declaration//GEN-END:variables
 
+    public void preencherCamposEditarTarefa(){//Carrega os dados do BD
+        if(editarTarefa != null) {//Se tiver clicado em editar tarefa...
+            txt_nomeTarefa.setText(editarTarefa.getNome());
+            txt_descricaoTarefa.setText(editarTarefa.getDescricao());
+            DateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
+            txt_prazoTarefa.setText(dataFormatada.format(editarTarefa.getPrazo()));
+            txt_obsTarefa.setText(editarTarefa.getObservacoes());
+        }
+    }
+    
     //MÉTODOS ACESSORES
     public void setProjeto(Projetos projeto) {
         this.projeto = projeto;
