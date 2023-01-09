@@ -12,7 +12,21 @@ public class Tarefas {
     private Date prazo;
     private Date dataCriacao;
     private Date dataAtualizacao;
+    private int etiquetas_id;
 
+    public Tarefas(int id, int proj_id, String nome, String descricao, Boolean concluido, String observacoes, Date prazo, Date dataCriacao, Date dataAtualizacao, int etiquetas_id) {
+        this.id = id;
+        this.proj_id = proj_id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.concluido = concluido;
+        this.observacoes = observacoes;
+        this.prazo = prazo;
+        this.dataCriacao = dataCriacao;
+        this.dataAtualizacao = dataAtualizacao;
+        this.etiquetas_id = etiquetas_id;
+    }
+    
     public Tarefas(int id, int proj_id, String nome, String descricao, Boolean concluido, String observacoes, Date prazo, Date dataCriacao, Date dataAtualizacao) {
         this.id = id;
         this.proj_id = proj_id;
@@ -100,5 +114,13 @@ public class Tarefas {
 
     public void setDataAtualizacao(Date dataAtualizacao) {
         this.dataAtualizacao = dataAtualizacao;
+    }
+
+    public int getEtiquetas_id() {
+        return etiquetas_id;
+    }
+
+    public void setEtiquetas_id(int etiqueta) {
+        this.etiquetas_id = etiqueta;
     }
 }

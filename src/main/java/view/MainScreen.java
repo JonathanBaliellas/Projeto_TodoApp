@@ -12,9 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableCellRenderer;
 import model.Projetos;
 import model.Tarefas;
 import util.RenderTabTarefasBotoes;
@@ -525,7 +523,7 @@ public class MainScreen extends javax.swing.JFrame {
         
         modeloProjeto.clear();//Limpa o modelo
         
-        for(int i=0; i<listaProjetos.size();i++){
+        for(int i=0; i < listaProjetos.size();i++){
             //Cria um objeto Projeto que recebe um elemento da lista
             Projetos projeto = listaProjetos.get(i);
             

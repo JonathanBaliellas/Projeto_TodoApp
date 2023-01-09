@@ -13,9 +13,9 @@ public class TarefaController {
     public void incluir(Tarefas tarefa){
         //Comando SQL
         String sql = "INSERT INTO tarefas " +
-                "(nome, descricao, concluido, observacoes, prazo, dataCriacao, dataAtualizacao, proj_id)" +
+                "(nome, descricao, concluido, observacoes, prazo, dataCriacao, dataAtualizacao, proj_id, etiquetas_id)" +
                 "VALUES" +
-                "(?, ?, ?, ?, ?, ?, ?, ?);";
+                "(?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         Connection conexao = null;//Conexão com o BD
         PreparedStatement declaracao = null;//Declaração SQL
@@ -33,6 +33,7 @@ public class TarefaController {
             declaracao.setDate(6, new Date(tarefa.getDataCriacao().getTime()));
             declaracao.setDate(7, new Date(tarefa.getDataAtualizacao().getTime()));
             declaracao.setInt(8, tarefa.getProj_id());
+            declaracao.setInt(9, tarefa.getEtiquetas_id());
 
             //Envia dados ao BD
             declaracao.execute();
@@ -67,7 +68,7 @@ public class TarefaController {
 
     public void atualizar(Tarefas tarefa){
         String sql = "UPDATE tarefas SET " +
-                "nome = ?, descricao = ?, concluido = ?, observacoes = ?, prazo = ?, dataAtualizacao = ? " +
+                "nome = ?, descricao = ?, concluido = ?, observacoes = ?, prazo = ?, dataAtualizacao = ?, etiquetas_id = ? " +
                 "WHERE id = ?;";
 
         Connection conexao = null;//Conexão com o BD
@@ -84,7 +85,9 @@ public class TarefaController {
             declaracao.setString(4, tarefa.getObservacoes());
             declaracao.setDate(5, new Date(tarefa.getPrazo().getTime()));
             declaracao.setDate(6, new Date(tarefa.getDataAtualizacao().getTime()));
-            declaracao.setInt(7, tarefa.getId());
+            declaracao.setInt(7, tarefa.getEtiquetas_id());
+            declaracao.setInt(8, tarefa.getId());
+            
 
             //Executa comando SQL
             declaracao.execute();
@@ -125,12 +128,13 @@ public class TarefaController {
                 tarefa.setDataCriacao(consulta.getDate("dataCriacao"));
                 tarefa.setDataAtualizacao(consulta.getDate("dataAtualizacao"));
                 tarefa.setProj_id(consulta.getInt("proj_id"));
+                tarefa.setEtiquetas_id(consulta.getInt("etiquetas_id"));
 
                 //Insere a tarefa na lista de tarefas
                 listaTarefas.add(tarefa);
             }
 
-            //Confirmação
+            //Confirma��o
             System.out.println("Consulta realizada com sucesso!");
         }catch (Exception e){
             throw new RuntimeException("Erro ao consultar o banco de dados.\n" + e.getMessage(), e);

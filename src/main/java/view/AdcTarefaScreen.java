@@ -4,11 +4,15 @@
  */
 package view;
 
+import controller.EtiquetaController;
 import controller.TarefaController;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import model.Etiquetas;
 import model.Tarefas;
 import model.Projetos;
 
@@ -21,20 +25,31 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
     /**
      * Creates new form AdcTarefaScreen
      */
-    
     //ATRIBUTOS
     TarefaController controlador;//Declara o controlador da tarefa
+    EtiquetaController etiquetaController;//Declara o controlador das etiquetas
     Projetos projeto;//Declara um projeto
     Tarefas editarTarefa;
-    
+    DefaultComboBoxModel modeloCmb;//Cria um novo modelo de caixa de combinação
+    boolean novoSelecionado = false;
+    List<Etiquetas> listaEtiquetas;
+
     //CONSTRUTOR
-    public AdcTarefaScreen(java.awt.Frame parent, boolean modal) {}
-    
+    public AdcTarefaScreen(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        controlador = new TarefaController();//Instancia o controlador
+        etiquetaController = new EtiquetaController();//Instancia o controlador
+        listarEtiquetas();
+    }
+
     public AdcTarefaScreen(java.awt.Frame parent, boolean modal, Tarefas editarTarefa) {
         super(parent, modal);
         initComponents();
         controlador = new TarefaController();//Instancia o controlador
+        etiquetaController = new EtiquetaController();//Instancia o controlador
         this.editarTarefa = editarTarefa;
+        listarEtiquetas();
         preencherCamposEditarTarefa();
     }
 
@@ -62,6 +77,8 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
         lbl_obsTarefa = new javax.swing.JLabel();
         spn_obsTarefa = new javax.swing.JScrollPane();
         txt_obsTarefa = new javax.swing.JTextArea();
+        lbl_etiquetaTarefa = new javax.swing.JLabel();
+        cmb_etiquetaTarefa = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Adicionar Tarefa");
@@ -137,6 +154,19 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
         txt_obsTarefa.setToolTipText("Preencha com observações sobre a tarefa");
         spn_obsTarefa.setViewportView(txt_obsTarefa);
 
+        lbl_etiquetaTarefa.setBackground(java.awt.Color.white);
+        lbl_etiquetaTarefa.setForeground(new java.awt.Color(0, 0, 0));
+        lbl_etiquetaTarefa.setText("Etiqueta");
+
+        cmb_etiquetaTarefa.setBackground(java.awt.Color.white);
+        cmb_etiquetaTarefa.setForeground(java.awt.Color.black);
+        cmb_etiquetaTarefa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmb_etiquetaTarefa.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmb_etiquetaTarefaItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnl_formLayout = new javax.swing.GroupLayout(pnl_form);
         pnl_form.setLayout(pnl_formLayout);
         pnl_formLayout.setHorizontalGroup(
@@ -151,7 +181,11 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
                     .addComponent(lbl_prazoTarefa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_obsTarefa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(spn_obsTarefa)
-                    .addComponent(txt_prazoTarefa))
+                    .addComponent(txt_prazoTarefa)
+                    .addGroup(pnl_formLayout.createSequentialGroup()
+                        .addComponent(lbl_etiquetaTarefa)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cmb_etiquetaTarefa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnl_formLayout.setVerticalGroup(
@@ -170,10 +204,14 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_prazoTarefa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(lbl_etiquetaTarefa)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmb_etiquetaTarefa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(lbl_obsTarefa)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spn_obsTarefa)
-                .addContainerGap())
+                .addComponent(spn_obsTarefa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -197,15 +235,15 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
     private void btn_adcTarefaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_adcTarefaMouseClicked
         // TODO add your handling code here:
         //Validação de dados
-        if(txt_nomeTarefa.getText().equals("") || txt_prazoTarefa.getText().isEmpty()){
-            JOptionPane.showMessageDialog(rootPane, 
-                    "Há campos obrigatórios que não foram preenchidos", 
+        if (txt_nomeTarefa.getText().equals("") || txt_prazoTarefa.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane,
+                    "Há campos obrigatórios que não foram preenchidos",
                     "Tarefa não salva", 0);
-        }else{
-            try{
+        } else {
+            try {
                 SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");//Cria um novo formatação de data
                 Date prazo = data.parse(txt_prazoTarefa.getText());//Converte o texto para o formato de data
-                
+
                 //Cria um objeto Tarefa e insere os valores
                 Tarefas tarefa = new Tarefas();
                 tarefa.setNome(txt_nomeTarefa.getText());
@@ -214,22 +252,45 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
                 tarefa.setPrazo(prazo);
                 tarefa.setConcluido(false);
                 tarefa.setProj_id(projeto.getId());
-                
+                if(cmb_etiquetaTarefa.getSelectedIndex() != cmb_etiquetaTarefa.getItemCount() - 1){
+                    Etiquetas etiqueta = new Etiquetas();
+                    etiqueta = listaEtiquetas.get(cmb_etiquetaTarefa.getSelectedIndex());
+                    tarefa.setEtiquetas_id(etiqueta.getId());
+                }else JOptionPane.showMessageDialog(rootPane, tarefa.getEtiquetas_id());
+
                 //Envia a tarefa para o controlador
-                if(editarTarefa == null) controlador.incluir(tarefa);
-                else {
+                if (editarTarefa == null) {
+                    controlador.incluir(tarefa);
+                } else {
                     tarefa.setId(editarTarefa.getId());
                     controlador.atualizar(tarefa);
                 }
-                
+
                 //Confirmação
                 JOptionPane.showMessageDialog(rootPane, "Tarefa salva com sucesso!", "Sucesso", 1);
                 this.dispose();//Fecha a janela
-            }catch(Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(rootPane, "Erro ao salvar tarefa", "Erro", 0);
             }
         }
     }//GEN-LAST:event_btn_adcTarefaMouseClicked
+
+    private void cmb_etiquetaTarefaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmb_etiquetaTarefaItemStateChanged
+        if (!novoSelecionado) {
+            if (cmb_etiquetaTarefa.getSelectedIndex() == cmb_etiquetaTarefa.getItemCount() - 1) {
+                String novaEtiqueta = JOptionPane.showInputDialog(rootPane, "Nome da etiqueta", "Nova etiqueta", -1);
+                
+                if(novaEtiqueta == null || novaEtiqueta.equals("")) {
+                    cmb_etiquetaTarefa.setSelectedIndex(0);
+                } else {
+                    etiquetaController.incluir(novaEtiqueta);
+                    listarEtiquetas();
+                    cmb_etiquetaTarefa.setSelectedIndex(cmb_etiquetaTarefa.getItemCount()-2);
+                }
+                novoSelecionado = true;
+            }
+        } else novoSelecionado = false;
+    }//GEN-LAST:event_cmb_etiquetaTarefaItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -242,7 +303,7 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Java Swing".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -275,7 +336,9 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_adcTarefa;
+    private javax.swing.JComboBox<String> cmb_etiquetaTarefa;
     private javax.swing.JLabel lbl_descricaoTarefa;
+    private javax.swing.JLabel lbl_etiquetaTarefa;
     private javax.swing.JLabel lbl_nomeTarefa;
     private javax.swing.JLabel lbl_obsTarefa;
     private javax.swing.JLabel lbl_prazoTarefa;
@@ -290,20 +353,40 @@ public class AdcTarefaScreen extends javax.swing.JDialog {
     private javax.swing.JFormattedTextField txt_prazoTarefa;
     // End of variables declaration//GEN-END:variables
 
-    public void preencherCamposEditarTarefa(){//Carrega os dados do BD
-        if(editarTarefa != null) {//Se tiver clicado em editar tarefa...
+    public void preencherCamposEditarTarefa() {//Carrega os dados do BD
+        if (editarTarefa != null) {//Se tiver clicado em editar tarefa...
+            int indiceCombo = 0;
             txt_nomeTarefa.setText(editarTarefa.getNome());
             txt_descricaoTarefa.setText(editarTarefa.getDescricao());
             DateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
             txt_prazoTarefa.setText(dataFormatada.format(editarTarefa.getPrazo()));
             txt_obsTarefa.setText(editarTarefa.getObservacoes());
+            
+            for (int i = 0; i < listaEtiquetas.size(); i++){
+                if(listaEtiquetas.get(i).getId() == editarTarefa.getEtiquetas_id())
+                    indiceCombo = i;
+            }
+            
+            cmb_etiquetaTarefa.setSelectedIndex(indiceCombo);
         }
     }
-    
+
+    private void listarEtiquetas() {
+        listaEtiquetas = etiquetaController.consultar();
+        modeloCmb = new DefaultComboBoxModel();
+
+        for (int i = 0; i < listaEtiquetas.size(); i++) {
+            Etiquetas etiqueta = new Etiquetas();
+            etiqueta = listaEtiquetas.get(i);
+            modeloCmb.addElement(etiqueta.getNome());
+        }
+        modeloCmb.addElement("Nova Etiqueta");
+
+        cmb_etiquetaTarefa.setModel(modeloCmb);
+    }
+
     //MÉTODOS ACESSORES
     public void setProjeto(Projetos projeto) {
         this.projeto = projeto;
     }
-
-    
 }
