@@ -63,6 +63,22 @@
         </Component>
       </SubComponents>
     </Container>
+    <Container class="javax.swing.JPopupMenu" name="pmn_usuario">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="true"/>
+      </Layout>
+    </Container>
+    <Component class="javax.swing.JMenuItem" name="mni_trocarUsuario">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Trocar usu&#xe1;rio"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JMenuItem" name="mni_alterarSenha">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Alterar senha"/>
+      </Properties>
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -103,9 +119,8 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="pnl_adcTarefa" max="32767" attributes="0"/>
-                  <Component id="pnl_listaTarefas" max="32767" attributes="0"/>
+                  <Component id="pnl_listaTarefas" pref="554" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -120,7 +135,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="pnl_listaTarefas" max="32767" attributes="0"/>
+                  <Component id="pnl_listaTarefas" pref="419" max="32767" attributes="0"/>
                   <Component id="pnl_listaProjetos" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -143,7 +158,11 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lbl_motto" max="32767" attributes="0"/>
-                      <Component id="lbl_titulo" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lbl_titulo" alignment="0" pref="782" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="lbl_usuario" min="-2" pref="218" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -152,7 +171,9 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                  <Component id="lbl_usuario" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="lbl_titulo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="lbl_motto" min="-2" max="-2" attributes="0"/>
@@ -183,6 +204,21 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Anote tudo, n&#xe3;o esque&#xe7;a nada"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbl_usuario">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" value="Usu&#xe1;rio:"/>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lbl_usuarioMouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -15,6 +15,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import model.Projetos;
 import model.Tarefas;
+import model.Usuarios;
 import util.RenderTabTarefasBotoes;
 import util.RenderTabTarefasCelPrazo;
 import util.TabTarefasModel;
@@ -35,11 +36,13 @@ public class MainScreen extends javax.swing.JFrame {
     DefaultListModel modeloProjeto;
     TabTarefasModel modeloTarefas;
     Tarefas editarTarefa;
-    
+    //int usuarioId;
+    Usuarios usuario;
     
     //MÉTODOS DE COMPONENTES    
     public MainScreen() {
         initComponents();//Inicializa os componentes da janela
+        setLocationRelativeTo(null);//Centraliza a janela
         iniciarControllers();//Inicializa os controladores
         iniciarComponentModel();//Inicializa os modelos dos componentes
     }
@@ -57,9 +60,13 @@ public class MainScreen extends javax.swing.JFrame {
         lbl_listaVaziaIcon = new javax.swing.JLabel();
         lbl_listaVaziaTitulo = new javax.swing.JLabel();
         lbl_listaVaziaSub = new javax.swing.JLabel();
+        pmn_usuario = new javax.swing.JPopupMenu();
+        mni_trocarUsuario = new javax.swing.JMenuItem();
+        mni_alterarSenha = new javax.swing.JMenuItem();
         pnl_titulo = new javax.swing.JPanel();
         lbl_titulo = new javax.swing.JLabel();
         lbl_motto = new javax.swing.JLabel();
+        lbl_usuario = new javax.swing.JLabel();
         pnl_adcProjeto = new javax.swing.JPanel();
         lbl_adcProjeto = new javax.swing.JLabel();
         btn_adcProjeto = new javax.swing.JLabel();
@@ -107,6 +114,10 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        mni_trocarUsuario.setText("Trocar usuário");
+
+        mni_alterarSenha.setText("Alterar senha");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TodoApp");
         setMinimumSize(new java.awt.Dimension(800, 700));
@@ -122,6 +133,16 @@ public class MainScreen extends javax.swing.JFrame {
         lbl_motto.setForeground(new java.awt.Color(255, 255, 255));
         lbl_motto.setText("Anote tudo, não esqueça nada");
 
+        lbl_usuario.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbl_usuario.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_usuario.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_usuario.setText("Usuário:");
+        lbl_usuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbl_usuarioMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnl_tituloLayout = new javax.swing.GroupLayout(pnl_titulo);
         pnl_titulo.setLayout(pnl_tituloLayout);
         pnl_tituloLayout.setHorizontalGroup(
@@ -130,13 +151,18 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnl_tituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_motto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_titulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_titulo, javax.swing.GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_tituloLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lbl_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnl_tituloLayout.setVerticalGroup(
             pnl_tituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_tituloLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(17, 17, 17)
+                .addComponent(lbl_usuario)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_titulo)
                 .addGap(18, 18, 18)
                 .addComponent(lbl_motto)
@@ -316,8 +342,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnl_adcTarefa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnl_listaTarefas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(pnl_listaTarefas, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -329,7 +354,7 @@ public class MainScreen extends javax.swing.JFrame {
                     .addComponent(pnl_adcTarefa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnl_listaTarefas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnl_listaTarefas, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
                     .addComponent(pnl_listaProjetos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -414,6 +439,12 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tab_listaTarefasMouseClicked
 
+    private void lbl_usuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_usuarioMouseClicked
+        pmn_usuario.add(mni_trocarUsuario);
+        pmn_usuario.add(mni_alterarSenha);
+        pmn_usuario.show(this, lbl_usuario.getX() + lbl_usuario.getWidth() - 95, lbl_usuario.getY()+50);
+    }//GEN-LAST:event_lbl_usuarioMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -459,7 +490,11 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_listaVaziaTitulo;
     private javax.swing.JLabel lbl_motto;
     private javax.swing.JLabel lbl_titulo;
+    private javax.swing.JLabel lbl_usuario;
     private javax.swing.JList<String> lst_Projetos;
+    private javax.swing.JMenuItem mni_alterarSenha;
+    private javax.swing.JMenuItem mni_trocarUsuario;
+    private javax.swing.JPopupMenu pmn_usuario;
     private javax.swing.JPanel pnl_adcProjeto;
     private javax.swing.JPanel pnl_adcTarefa;
     private javax.swing.JPanel pnl_listaProjetos;
@@ -564,4 +599,18 @@ public class MainScreen extends javax.swing.JFrame {
             pnl_listaVazia.setSize(pnl_listaTarefas.getWidth(), pnl_listaTarefas.getHeight());
         }
     }
+/*
+    public void setUsuario(int usuarioId) {
+        this.usuarioId = usuarioId;
+        
+        //Exibe nome de usuário
+        lbl_usuario.setText("Usuário: " + usuarioId);
+    }
+*/
+
+    public void setUsuario(Usuarios usuario) {
+        this.usuario = usuario;
+        lbl_usuario.setText("Usuário: " + usuario.getUsuario());
+    }
+    
 }
