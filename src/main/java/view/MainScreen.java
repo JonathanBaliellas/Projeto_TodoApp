@@ -36,7 +36,6 @@ public class MainScreen extends javax.swing.JFrame {
     DefaultListModel modeloProjeto;
     TabTarefasModel modeloTarefas;
     Tarefas editarTarefa;
-    //int usuarioId;
     Usuarios usuario;
     
     //MÉTODOS DE COMPONENTES    
@@ -56,13 +55,11 @@ public class MainScreen extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnl_listaVazia = new javax.swing.JPanel();
-        lbl_listaVaziaIcon = new javax.swing.JLabel();
-        lbl_listaVaziaTitulo = new javax.swing.JLabel();
-        lbl_listaVaziaSub = new javax.swing.JLabel();
         pmn_usuario = new javax.swing.JPopupMenu();
         mni_trocarUsuario = new javax.swing.JMenuItem();
         mni_alterarSenha = new javax.swing.JMenuItem();
+        spn_listaTarefas = new javax.swing.JScrollPane();
+        tab_listaTarefas = new javax.swing.JTable();
         pnl_titulo = new javax.swing.JPanel();
         lbl_titulo = new javax.swing.JLabel();
         lbl_motto = new javax.swing.JLabel();
@@ -77,46 +74,70 @@ public class MainScreen extends javax.swing.JFrame {
         spn_listaProjetos = new javax.swing.JScrollPane();
         lst_Projetos = new javax.swing.JList<>();
         pnl_listaTarefas = new javax.swing.JPanel();
-        spn_listaTarefas = new javax.swing.JScrollPane();
-        tab_listaTarefas = new javax.swing.JTable();
-
-        pnl_listaVazia.setBackground(new java.awt.Color(255, 255, 255));
-
-        lbl_listaVaziaIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_listaVaziaIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lists.png"))); // NOI18N
-
-        lbl_listaVaziaTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lbl_listaVaziaTitulo.setForeground(new java.awt.Color(0, 153, 102));
-        lbl_listaVaziaTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_listaVaziaTitulo.setText("Nenhuma tarefa por aqui :D");
-
-        lbl_listaVaziaSub.setForeground(new java.awt.Color(153, 153, 153));
-        lbl_listaVaziaSub.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_listaVaziaSub.setText("Clique no botão \"+\" para adicionar uma nofa tarefa");
-
-        javax.swing.GroupLayout pnl_listaVaziaLayout = new javax.swing.GroupLayout(pnl_listaVazia);
-        pnl_listaVazia.setLayout(pnl_listaVaziaLayout);
-        pnl_listaVaziaLayout.setHorizontalGroup(
-            pnl_listaVaziaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbl_listaVaziaIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lbl_listaVaziaTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lbl_listaVaziaSub, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
-        );
-        pnl_listaVaziaLayout.setVerticalGroup(
-            pnl_listaVaziaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnl_listaVaziaLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_listaVaziaIcon)
-                .addGap(18, 18, 18)
-                .addComponent(lbl_listaVaziaTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_listaVaziaSub)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        pnl_listaVazia = new javax.swing.JPanel();
+        lbl_listaVaziaIcon = new javax.swing.JLabel();
+        lbl_listaVaziaTitulo = new javax.swing.JLabel();
+        lbl_listaVaziaSub = new javax.swing.JLabel();
 
         mni_trocarUsuario.setText("Trocar usuário");
+        mni_trocarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mni_trocarUsuarioActionPerformed(evt);
+            }
+        });
 
         mni_alterarSenha.setText("Alterar senha");
+        mni_alterarSenha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mni_alterarSenhaActionPerformed(evt);
+            }
+        });
+
+        spn_listaTarefas.setBackground(new java.awt.Color(255, 255, 255));
+        spn_listaTarefas.setBorder(null);
+
+        tab_listaTarefas.setBackground(new java.awt.Color(255, 255, 255));
+        tab_listaTarefas.setForeground(new java.awt.Color(0, 153, 102));
+        tab_listaTarefas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Nome", "Descrição", "Prazo", "Concluído"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tab_listaTarefas.setFillsViewportHeight(true);
+        tab_listaTarefas.setGridColor(new java.awt.Color(0, 153, 102));
+        tab_listaTarefas.setRowHeight(40);
+        tab_listaTarefas.setSelectionBackground(new java.awt.Color(0, 153, 102));
+        tab_listaTarefas.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        tab_listaTarefas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tab_listaTarefas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tab_listaTarefas.setShowGrid(false);
+        tab_listaTarefas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tab_listaTarefasMouseClicked(evt);
+            }
+        });
+        spn_listaTarefas.setViewportView(tab_listaTarefas);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("TodoApp");
@@ -281,53 +302,41 @@ public class MainScreen extends javax.swing.JFrame {
         pnl_listaTarefas.setBackground(new java.awt.Color(255, 255, 255));
         pnl_listaTarefas.setLayout(new java.awt.BorderLayout());
 
-        spn_listaTarefas.setBackground(new java.awt.Color(255, 255, 255));
-        spn_listaTarefas.setBorder(null);
+        pnl_listaVazia.setBackground(new java.awt.Color(255, 255, 255));
 
-        tab_listaTarefas.setBackground(new java.awt.Color(255, 255, 255));
-        tab_listaTarefas.setForeground(new java.awt.Color(0, 153, 102));
-        tab_listaTarefas.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Nome", "Descrição", "Prazo", "Concluído"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, true
-            };
+        lbl_listaVaziaIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_listaVaziaIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lists.png"))); // NOI18N
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
+        lbl_listaVaziaTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lbl_listaVaziaTitulo.setForeground(new java.awt.Color(0, 153, 102));
+        lbl_listaVaziaTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_listaVaziaTitulo.setText("Nenhuma tarefa por aqui :D");
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tab_listaTarefas.setFillsViewportHeight(true);
-        tab_listaTarefas.setGridColor(new java.awt.Color(0, 153, 102));
-        tab_listaTarefas.setRowHeight(40);
-        tab_listaTarefas.setSelectionBackground(new java.awt.Color(0, 153, 102));
-        tab_listaTarefas.setSelectionForeground(new java.awt.Color(255, 255, 255));
-        tab_listaTarefas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tab_listaTarefas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tab_listaTarefas.setShowGrid(false);
-        tab_listaTarefas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tab_listaTarefasMouseClicked(evt);
-            }
-        });
-        spn_listaTarefas.setViewportView(tab_listaTarefas);
+        lbl_listaVaziaSub.setForeground(new java.awt.Color(153, 153, 153));
+        lbl_listaVaziaSub.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_listaVaziaSub.setText("Clique no botão \"+\" para adicionar uma nofa tarefa");
 
-        pnl_listaTarefas.add(spn_listaTarefas, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout pnl_listaVaziaLayout = new javax.swing.GroupLayout(pnl_listaVazia);
+        pnl_listaVazia.setLayout(pnl_listaVaziaLayout);
+        pnl_listaVaziaLayout.setHorizontalGroup(
+            pnl_listaVaziaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lbl_listaVaziaIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lbl_listaVaziaTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lbl_listaVaziaSub, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+        );
+        pnl_listaVaziaLayout.setVerticalGroup(
+            pnl_listaVaziaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_listaVaziaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_listaVaziaIcon)
+                .addGap(18, 18, 18)
+                .addComponent(lbl_listaVaziaTitulo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbl_listaVaziaSub)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnl_listaTarefas.add(pnl_listaVazia, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -365,12 +374,14 @@ public class MainScreen extends javax.swing.JFrame {
     private void btn_adcProjetoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_adcProjetoMouseClicked
         // TODO add your handling code here:
         AdcProjetoScreen telaCadProj = new AdcProjetoScreen(this, rootPaneCheckingEnabled);
+        telaCadProj.setIdUsuario(usuario.getId());
         telaCadProj.setVisible(true);
         
         //Cria um listener para atualização da lista de projetos
         telaCadProj.addWindowListener(new WindowAdapter(){
             public void windowClosed(WindowEvent e){
                 carregarProjetos();//Atualiza a lista
+                lst_Projetos.setSelectedIndex(modeloProjeto.size() - 1);
             }
         });
     }//GEN-LAST:event_btn_adcProjetoMouseClicked
@@ -402,9 +413,11 @@ public class MainScreen extends javax.swing.JFrame {
     private void lst_ProjetosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lst_ProjetosMouseClicked
         int proj_indice = lst_Projetos.getSelectedIndex();//Recebe o índice do item selecionado
         
-        //Cria um objeto Projeto a partir dos objetos da lista de modelo de projetos
-        Projetos projeto = (Projetos) modeloProjeto.get(proj_indice);
-        carregarTarefas(projeto.getId());//Carrega as tarefas do projeto selecionado
+        if(proj_indice != -1){
+            //Cria um objeto Projeto a partir dos objetos da lista de modelo de projetos
+            Projetos projeto = (Projetos) modeloProjeto.get(proj_indice);
+            carregarTarefas(projeto.getId());//Carrega as tarefas do projeto selecionado
+        }
     }//GEN-LAST:event_lst_ProjetosMouseClicked
 
     private void tab_listaTarefasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tab_listaTarefasMouseClicked
@@ -444,6 +457,17 @@ public class MainScreen extends javax.swing.JFrame {
         pmn_usuario.add(mni_alterarSenha);
         pmn_usuario.show(this, lbl_usuario.getX() + lbl_usuario.getWidth() - 95, lbl_usuario.getY()+50);
     }//GEN-LAST:event_lbl_usuarioMouseClicked
+
+    private void mni_trocarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mni_trocarUsuarioActionPerformed
+        LoginScreen telaLogin = new LoginScreen();
+        telaLogin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mni_trocarUsuarioActionPerformed
+
+    private void mni_alterarSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mni_alterarSenhaActionPerformed
+        AdcUsuarioScreen telaUsuario = new AdcUsuarioScreen(this, rootPaneCheckingEnabled, usuario);
+        telaUsuario.setVisible(true);
+    }//GEN-LAST:event_mni_alterarSenhaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -531,7 +555,7 @@ public class MainScreen extends javax.swing.JFrame {
     public void iniciarComponentModel(){
         //Iniciar lista de projetos
         modeloProjeto = new DefaultListModel();
-        carregarProjetos();
+        //carregarProjetos();
         
         //Iniciar tabela de tarefas
         modeloTarefas = new TabTarefasModel();
@@ -539,22 +563,12 @@ public class MainScreen extends javax.swing.JFrame {
         
         //Aplica configurações de renderização da tabela personalizados
         decorarTabela();
-        
-        //Seleciona o primeiro projeto da lista e carrega suas tarefas
-        if(!modeloProjeto.isEmpty()){//Se a lista de projetos não estiver vazia
-            lst_Projetos.setSelectedIndex(0);//Seleciona o primeiro projeto
-            
-            //Cria um objeto Projeto com o primeiro item da lista de projetos
-            Projetos projeto = (Projetos) modeloProjeto.get(0);
-            
-            //Carrega as tarefas do projeto
-            carregarTarefas(projeto.getId());
-        }
     }
 
     private void carregarProjetos() {
+        int idUsuario = usuario.getId();
         //Cria uma estrutura de dados de lista que recebe todos os dados de projetos do BD
-        List<Projetos> listaProjetos = projetoController.consultar();
+        List<Projetos> listaProjetos = projetoController.consultar(idUsuario);
         
         modeloProjeto.clear();//Limpa o modelo
         
@@ -568,6 +582,17 @@ public class MainScreen extends javax.swing.JFrame {
         
         //Define o objeto modelo como lista do componente
         lst_Projetos.setModel(modeloProjeto);
+        
+        //Seleciona o primeiro projeto da lista e carrega suas tarefas
+        if(!modeloProjeto.isEmpty()){//Se a lista de projetos não estiver vazia
+            lst_Projetos.setSelectedIndex(0);//Seleciona o primeiro projeto
+            
+            //Cria um objeto Projeto com o primeiro item da lista de projetos
+            Projetos projeto = (Projetos) modeloProjeto.get(0);
+            
+            //Carrega as tarefas do projeto
+            carregarTarefas(projeto.getId());
+        }
     }
     
     private void carregarTarefas(int proj_id){
@@ -611,6 +636,7 @@ public class MainScreen extends javax.swing.JFrame {
     public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
         lbl_usuario.setText("Usuário: " + usuario.getUsuario());
+        carregarProjetos();
     }
-    
+
 }

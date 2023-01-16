@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjetoController {
-    public void incluir(Projetos projeto){
-        String sql = "INSERT INTO projetos (nome, descricao, dataCriacao, dataAtualizacao)" +
-                "VALUES (?, ?, ?, ?);";
+    public void incluir(Projetos projeto, int idUsuario){
+        String sql = "INSERT INTO projetos (nome, descricao, dataCriacao, dataAtualizacao, usuarios_id)" +
+                "VALUES (?, ?, ?, ?, ?);";
 
         Connection conexao = null;//Conex√£o com BD
         PreparedStatement declaracao = null;//Declara√ß√£o SQL
@@ -26,6 +26,7 @@ public class ProjetoController {
             declaracao.setString(2, projeto.getDescricao());
             declaracao.setDate(3, new Date(projeto.getDataCriacao().getTime()));
             declaracao.setDate(4, new Date(projeto.getDataAtualizacao().getTime()));
+            declaracao.setInt(5, idUsuario);
 
             //Envia os dados ao BD
             declaracao.execute();
@@ -86,17 +87,18 @@ public class ProjetoController {
         }
     }
 
-    public List<Projetos> consultar(){
-        String sql = "SELECT * FROM projetos;";
+    public List<Projetos> consultar(int idUsuario){
+        String sql = "SELECT * FROM projetos WHERE usuarios_id = ?;";
         List<Projetos> listaProjetos = new ArrayList<Projetos>();//Lista de Projetos
 
-        Connection conexao = null;//Conex√£o com BD
-        PreparedStatement declaracao = null;//Declara√ß√£o SQL
+        Connection conexao = null;//Conex„o com BD
+        PreparedStatement declaracao = null;//DeclaraÁ„o SQL
         ResultSet consulta = null;//Consulta SQL
 
         try{
             conexao = ConexaoBD.conectar();//Conecta com o BD
-            declaracao = conexao.prepareStatement(sql);//Prepara a declara√ß√£o SQL
+            declaracao = conexao.prepareStatement(sql);//Prepara a declaraÁ„o SQL
+            declaracao.setInt(1, idUsuario);
             consulta = declaracao.executeQuery();//Executa a consulta e armazena na vari√°vel
 
             while (consulta.next()){

@@ -18,6 +18,7 @@ public class AdcProjetoScreen extends javax.swing.JDialog {
      * Creates new form AdcProjetoScreen
      */
     ProjetoController controlador;//Declara o controlador do projeto
+    int idUsuario;
 
     public AdcProjetoScreen(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -157,7 +158,7 @@ public class AdcProjetoScreen extends javax.swing.JDialog {
                 projeto.setNome(txt_nomeProjeto.getText());
                 projeto.setDescricao(txt_descricaoProjeto.getText());
 
-                controlador.incluir(projeto);//Envia os dados ao controlador e salva no BD
+                controlador.incluir(projeto, idUsuario);//Envia os dados ao controlador e salva no BD
 
                 //Mostra uma caixa de diálogo confirmando a criação do projeto
                 JOptionPane.showMessageDialog(rootPane, "Projeto salvo com sucesso!", "Sucesso", 1);
@@ -222,4 +223,8 @@ public class AdcProjetoScreen extends javax.swing.JDialog {
     private javax.swing.JTextArea txt_descricaoProjeto;
     private javax.swing.JTextField txt_nomeProjeto;
     // End of variables declaration//GEN-END:variables
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 }
